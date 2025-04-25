@@ -1,5 +1,6 @@
 <script>
 	import Header from './Header.svelte';
+	import { A } from 'flowbite-svelte';
 	import '../app.css';
 
 	let { children } = $props();
@@ -16,7 +17,7 @@
 	
 	<footer>
 		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
+			由 <A class="font-medium hover:underline" href="https://vercel.com/" target="_blank">Vercel</A>  提供快速的部署服务 Copyright © 2025-04 <A class="font-medium hover:underline" href="https://github.com/ningOEX" target="_blank">ningOEX</A>
 		</p>
 	</footer>
 </div>

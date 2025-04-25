@@ -1,198 +1,96 @@
-<!-- svelte内置动画 + 过渡效果 show -->
 <script>
 	import { blur, fade, fly, scale, slide } from 'svelte/transition';
 	import {
-		backIn,
-		backInOut,
-		backOut,
-		bounceIn,
-		bounceInOut,
-		bounceOut,
-		circIn,
-		circInOut,
-		circOut,
-		cubicIn,
-		cubicInOut,
-		cubicOut,
-		elasticIn,
-		elasticInOut,
-		elasticOut,
-		expoIn,
-		expoInOut,
-		expoOut,
-		linear,
-		quadIn,
-		quadInOut,
-		quadOut,
-		quartIn,
-		quartInOut,
-		quartOut,
-		quintIn,
-		quintInOut,
-		quintOut,
-		sineIn,
-		sineInOut,
-		sineOut
+		backIn, backInOut, backOut,
+		bounceIn, bounceInOut, bounceOut,
+		circIn, circInOut, circOut,
+		cubicIn, cubicInOut, cubicOut,
+		elasticIn, elasticInOut, elasticOut,
+		expoIn, expoInOut, expoOut,
+		linear, quadIn, quadInOut, quadOut,
+		quartIn, quartInOut, quartOut,
+		quintIn, quintInOut, quintOut,
+		sineIn, sineInOut, sineOut
 	} from 'svelte/easing';
 	import { Card, Button, Modal } from 'flowbite-svelte';
 	import { Hr } from 'flowbite-svelte';
 
-	const transitionType = ['blur', 'fade', 'fly', 'scale', 'slide'];
-	const _transition = [blur, fade, fly, scale, slide];
-	const easingType = [
-		'backIn',
-		'backInOut',
-		'backOut',
-		'bounceIn',
-		'bounceInOut',
-		'bounceOut',
-		'circIn',
-		'circInOut',
-		'circOut',
-		'cubicIn',
-		'cubicInOut',
-		'cubicOut',
-		'elasticIn',
-		'elasticInOut',
-		'elasticOut',
-		'expoIn',
-		'expoInOut',
-		'expoOut',
-		'linear',
-		'quadIn',
-		'quadInOut',
-		'quadOut',
-		'quartIn',
-		'quartInOut',
-		'quartOut',
-		'quintIn',
-		'quintInOut',
-		'quintOut',
-		'sineIn',
-		'sineInOut',
-		'sineOut'
-	];
-	const _easing = [
-		backIn,
-		backInOut,
-		backOut,
-		bounceIn,
-		bounceInOut,
-		bounceOut,
-		circIn,
-		circInOut,
-		circOut,
-		cubicIn,
-		cubicInOut,
-		cubicOut,
-		elasticIn,
-		elasticInOut,
-		elasticOut,
-		expoIn,
-		expoInOut,
-		expoOut,
-		linear,
-		quadIn,
-		quadInOut,
-		quadOut,
-		quartIn,
-		quartInOut,
-		quartOut,
-		quintIn,
-		quintInOut,
-		quintOut,
-		sineIn,
-		sineInOut,
-		sineOut
-	];
-	const btnColor = [
-		'dark',
-		'light',
-		'blue',
-		'green',
-		'red',
-		'yellow',
-		'purple',
-		'alternative',
-		'light',
-		'blue',
-		'green',
-		'dark',
-		'light',
-		'blue',
-		'green',
-		'red',
-		'yellow',
-		'purple',
-		'alternative',
-		'light',
-		'red',
-		'yellow',
-		'purple',
-		'purple',
-		'dark',
-		'light',
-		'blue',
-		'green',
-		'red',
-		'yellow',
-		'purple',
-		'alternative',
-		'light',
-		'blue',
-		'green',
-		'red',
-		'yellow',
-		'purple',
-		'purple'
+	const transitions = [
+		{ name: 'blur', func: blur },
+		{ name: 'fade', func: fade },
+		{ name: 'fly', func: fly },
+		{ name: 'scale', func: scale },
+		{ name: 'slide', func: slide }
 	];
 
-    // 展示按钮
-	let showTransition = false;
-    let showEasing = false; 
+	const easings = [
+		{ name: 'backIn', func: backIn },
+		{ name: 'backInOut', func: backInOut },
+		{ name: 'backOut', func: backOut },
+		{ name: 'bounceIn', func: bounceIn },
+		{ name: 'bounceInOut', func: bounceInOut },
+		{ name: 'bounceOut', func: bounceOut },
+		{ name: 'circIn', func: circIn },
+		{ name: 'circInOut', func: circInOut },
+		{ name: 'circOut', func: circOut },
+		{ name: 'cubicIn', func: cubicIn },
+		{ name: 'cubicInOut', func: cubicInOut },
+		{ name: 'cubicOut', func: cubicOut },
+		{ name: 'elasticIn', func: elasticIn },
+		{ name: 'elasticInOut', func: elasticInOut },
+		{ name: 'elasticOut', func: elasticOut },
+		{ name: 'expoInOut', func: expoInOut },
+		{ name: 'expoOut', func: expoOut },
+		{ name: 'linear', func: linear },
+		{ name: 'quadIn', func: quadIn },
+		{ name: 'quadInOut', func: quadInOut },
+		{ name: 'quadOut', func: quadOut },
+		{ name: 'quartIn', func: quartIn },
+		{ name: 'quartInOut', func: quartInOut },
+		{ name: 'quartOut', func: quartOut },
+		{ name: 'quintIn', func: quintIn },
+		{ name: 'quintInOut', func: quintInOut },
+		{ name: 'quintOut', func: quintOut },
+		{ name: 'sineIn', func: sineIn },
+		{ name: 'sineInOut', func: sineInOut },
+		{ name: 'sineOut', func: sineOut }
+	];
 
-    // 查看代码
-	let showCodeTransitionModal = false;
-	let showCodeEasingModal = false;
+	const btnColors = ['dark', 'light', 'blue', 'green', 'red', 'yellow', 'purple', 'alternative'];
 
+	let showCodeEasingModal = $state(false)
+	let showCodeTransitionModal = $state(false)
 
-	// transition
-	let TransitionType = null; // 函数
-	let transitionTitle = ''; // 显示标题
+	let isTransitionVisible = $state(false);
+	let isEasingVisible = $state(false); 
+	let transitionData = $state({ title: '', func: null });
+	let easingData = $state({ title: '', func: null });
 
-	// easing
-	let EasingType = null; // 函数
-	let easingTitle = null; //显示标题
-
-	const transitionClick = (type, index)=> {
-		transitionTitle = type;
-		TransitionType = _transition[index];
-		showTransition = !showTransition;
+	const toggleTransition = (type, index) => {
+		transitionData = { title: type, func: transitions[index].func };
+		isTransitionVisible = !isTransitionVisible;
 	};
-    const easingClick = (type,index)=>{
-        easingTitle = type
-        EasingType = _easing[index]
-        showEasing = !showEasing;
-    }
 
+	const toggleEasing = (type, index) => {
+		easingData = { title: type, func: easings[index].func };
+		isEasingVisible = !isEasingVisible;
+	};
 </script>
 
 <!-- 按钮区 -->
 <div class="flex w-full flex-wrap items-center gap-2">
-	<p>transition:</p>
-	{#each transitionType as type, index}
-		<Button color={btnColor[index]} class=" cursor-pointer" on:click={transitionClick(type, index)}
-			>{type}</Button
-		>
+	<p>Transition:</p>
+	{#each transitions as { name }, index}
+		<Button color={btnColors[index % btnColors.length]} on:click={() => toggleTransition(name, index)}>{name}</Button>
 	{/each}
 </div>
 
-{#if transitionTitle}
+{#if transitionData.title}
 <Hr classHr="my-2" />
-<p>easing:</p>
+<p>Easing:</p>
 <div class="easing-content relative flex w-full gap-2 overflow-x-scroll">
-	{#each easingType as type, index}
-		<Button color={btnColor[index]} class="cursor-pointer" on:click={easingClick(type, index)}>{type}</Button>
+	{#each easings as { name }, index}
+		<Button color={btnColors[index % btnColors.length]} on:click={() => toggleEasing(name, index)}>{name}</Button>
 	{/each}
 </div>
 {/if}
@@ -202,40 +100,38 @@
 <!-- 展示区 -->
 <div class="flex flex-wrap gap-10 min-h-72">
 	<div class="flex flex-col gap-2">
-		<p>transition当前过渡:{transitionTitle}</p>
-		{#if transitionTitle}
-        <Button class="w-[200px]" color="red" on:click={() => (showCodeTransitionModal = true)}>查看代码</Button>
+		<p>Current Transition: {transitionData.title}</p>
+		{#if transitionData.title}
+			<Button color="red" class="w-[200px]" on:click={() => (showCodeTransitionModal = true)}>View Code</Button>
 		{/if}
-		{#if showTransition}
-			<div class="box bg-red-500/30" transition:TransitionType>transition</div>
+		{#if isTransitionVisible}
+			<div class="box bg-amber-800/40" transition:transitionData.func>Transition</div>
 		{/if}
 	</div>
 	<div class="flex flex-col gap-2">
-        {#if transitionTitle}
-        <p> transition过渡：{transitionTitle} easing缓冲:{easingTitle}</p>
-		{#if easingTitle}
-        <Button class="w-[200px]" color="red" on:click={() => (showCodeEasingModal = true)}>查看代码</Button>
+		{#if transitionData.title}
+			<p>Transition: {transitionData.title}, Easing: {easingData.title}</p>
+			{#if easingData.title}
+				<Button color="red" class="w-[200px]" on:click={() => (showCodeEasingModal = true)}>View Code</Button>
+			{/if}
+			{#if isEasingVisible}
+				<div class="box bg-amber-300/50" transition:transitionData.func={{duration: 400, easing: easingData.func}}>Easing</div>
+			{/if}
 		{/if}
-		{#if showEasing}
-			<div class="box bg-blue-900/30" transition:TransitionType={{duration:400,easing:EasingType}}>easing</div>
-		{/if}
-        {/if}
 	</div>
 </div>
-
 
 <!-- 查看代码 -->
 <Modal bind:open={showCodeTransitionModal} autoclose>
     <div class="my-4 flex flex-col">
         <p>JavaScript</p>
 <pre class="border">
-{
-`import { ${transitionTitle} } from 'svelte/transition';`}
+{`import { ${transitionData.title} } from 'svelte/transition';`}
 </pre>
         <p>HTML</p>
 <pre class="border">
 {`{#if show}
-    <div class="box" transition:${transitionTitle}>transition</div>
+    <div class="box" transition:${transitionData.title}>Transition</div>
 {/if}`}
 </pre>
     </div>
@@ -245,14 +141,13 @@
     <div class="my-4 flex flex-col">
         <p>JavaScript</p>
 <pre class="border">
-{
-`import { ${transitionTitle} } from 'svelte/transition';
-import {${easingTitle}} from 'svelte/easing';`}
+{`import { ${transitionData.title} } from 'svelte/transition';
+import { ${easingData.title} } from 'svelte/easing';`}
 </pre>
         <p>HTML</p>
 <pre class="border">
 {`{#if show}
-    <div class="box" transition:${transitionTitle}={{duration:400,easing:${easingTitle}}}>easing</div>
+    <div class="box" transition:${transitionData.title}={{duration: 400, easing: ${easingData.title}}}>Easing</div>
 {/if}`}
 </pre>
     </div>
