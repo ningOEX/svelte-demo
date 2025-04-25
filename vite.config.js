@@ -4,12 +4,12 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
-	server:{
-		proxy:{
-			'/tools':{
-				target:'https://luckycola.com.cn', // 百度
-				changeOrigin: true,
-			}
-		}
-	}
+	// server:{
+	// 	proxy:{
+	// 		'/tools':{
+	// 			target:'https://luckycola.com.cn', // 百度
+	// 			changeOrigin: true,
+	// 		}
+	// 	}
+	// }
 });
